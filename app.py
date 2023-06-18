@@ -11,7 +11,7 @@ from streamlit_lottie import st_lottie
 model = load_model('best_model.h5')
 
 # Preprocess the dataset
-relevant_columns = ['Open', 'High', 'Low', 'Volume', 'Sentiment', 'Close']  # Ganti dengan kolom-kolom yang relevan dari dataset Anda
+relevant_columns = ['Open (Rp)', 'High (Rp)', 'Low (Rp)', 'Volume', 'Sentiment (-1/0/1)', 'Close (Rp)']  # Ganti dengan kolom-kolom yang relevan dari dataset Anda
 scaler = MinMaxScaler(feature_range=(0, 1))
 
 # Define the time steps
@@ -61,11 +61,22 @@ def show_beranda():
             st.markdown(
                 """
                 <ul class="text-justify">
-                    LSTM memiliki tiga gerbang (gate) utama: gerbang input, gerbang output, dan gerbang lupa (forget gate), sementara GRU hanya memiliki dua gerbang utama: gerbang reset dan gerbang update.
-                    <li>Gerbang input LSTM dapat memutuskan seberapa banyak informasi baru yang harus disimpan dalam memori jangka panjang, sementara gerbang reset GRU dapat digunakan untuk mengatur ulang memori jangka pendek yang ada.</li>
-                    <li>Gerbang lupa LSTM memungkinkan model untuk "menghapus" informasi yang tidak lagi diperlukan dari memori jangka panjang, sedangkan gerbang update GRU dapat digunakan untuk menentukan seberapa banyak informasi baru yang harus diambil dari memori jangka pendek.</li>
-                    <li>GRU memiliki jumlah parameter yang lebih sedikit dibandingkan LSTM, sehingga GRU dapat lebih cepat dikompilasi dan lebih cepat dilatih daripada LSTM.</li>
-                    <li>Pilihan antara LSTM dan GRU untuk tugas tertentu biasanya tergantung pada sifat data sekuensial yang dihadapi, serta kompleksitas dan kebutuhan pemrosesan model yang diperlukan.</li>
+                    1. Neural Network (NN):
+                    <li>Model matematis yang terinspirasi oleh cara kerja otak manusia.</li>
+                    <li>Terdiri dari jaringan neuron buatan terhubung dalam lapisan-lapisan.</li>
+                    <li>Digunakan untuk mempelajari pola-pola kompleks dalam data.</li>
+                    2. Recurrent Neural Network (RNN):
+                    <li>Jenis Neural Network yang dirancang untuk data berurutan.</li>
+                    <li>Menggunakan informasi sebelumnya melalui hubungan maju-mundur antar langkah waktu.</li>
+                    <li>Efektif dalam memodelkan ketergantungan kontekstual dalam urutan data.</li>
+                    3. Long Short-Term Memory (LSTM):
+                    <li>Varian RNN yang mengatasi masalah gradien yang menghilang/meledak.</li>
+                    <li>Memiliki gate: forget gate, input gate, dan output gate.</li>
+                    <li>Memungkinkan kontrol aliran informasi dalam memori internal.</li>                
+                    4. Gated Recurrent Unit (GRU):
+                    <li>Varian RNN dengan arsitektur yang lebih sederhana dibandingkan LSTM.</li>
+                    <li>Memiliki gate: update gate dan reset gate.</li>
+                    <li>Efisien dalam kasus-kasus di mana LSTM terlalu kompleks.</li>                        
                 </ul>
                 """,
                     unsafe_allow_html=True
@@ -77,8 +88,27 @@ def show_beranda():
             st_lottie(animasi2, height=300, key="coding1")
            # st_lottie(animasi1, height=300, key="coding1")
 
+    # ---- XX ----
+    with st.container():
+        st.write("---")
+        st.header("PENJELASAN ATRIBUT")
+        st.write("##")
+        st.markdown(
+                """
+                <ul class="text-justify">
+                    <li>Open : Harga pembukaan (open price) adalah harga perdagangan pertama kali suatu saham dibeli atau dijual pada suatu sesi perdagangan. Ini merupakan harga yang ditetapkan saat perdagangan dimulai pada waktu tertentu, misalnya saat pasar saham dibuka pada pagi hari.</li>
+                    <li>High : Harga tertinggi (high price) adalah harga tertinggi yang dicapai oleh suatu saham selama suatu periode tertentu, misalnya selama satu hari perdagangan. Ini menunjukkan harga paling tinggi yang pembeli bersedia bayar selama periode tersebut.</li>
+                    <li>Low : Harga terendah (low price) adalah harga terendah yang dicapai oleh suatu saham selama suatu periode tertentu. Ini menunjukkan harga paling rendah yang penjual bersedia terima selama periode tersebut.</li>     
+                    <li>Volume : Volume perdagangan (trading volume) adalah jumlah total saham yang diperdagangkan selama suatu periode tertentu. Ini mencerminkan tingkat likuiditas suatu saham dan dapat memberikan indikasi tentang minat dan partisipasi pasar.</li>
+                    <li>Sentiment : Sentimen pasar (market sentiment) mengacu pada persepsi umum atau sentimen yang dimiliki oleh pelaku pasar terhadap suatu saham atau pasar secara keseluruhan. Sentimen bisa positif, negatif, atau netral, dan dapat mempengaruhi harga saham secara langsung atau tidak langsung.</li>  
+                    <li>Close : Harga penutupan (closing price) adalah harga terakhir yang diperdagangkan untuk suatu saham pada akhir suatu sesi perdagangan. Ini adalah harga yang digunakan untuk menghitung perubahan harga relatif dan kinerja saham selama periode tersebut.</li>                    
+                </ul>
+                """,
+                    unsafe_allow_html=True
+            )
+
 def show_prediksi():
-    #st.subheader("Halaman Prediksi")
+    # st.subheader("Halaman Prediksi")
     st.markdown('<p class="title-justify" style="font-size: 32px; font-weight: bold;">Halaman Prediksi</p>', unsafe_allow_html=True)
     st.write("---")
 
@@ -89,7 +119,17 @@ def show_prediksi():
         input_row = []
         for idx, column in enumerate(relevant_columns):
             input_key = f"{column}_t-{i}"
-            value = st.number_input(f'{column} (t{i})', value=0.0, key=input_key)
+            
+            if column == 'Sentiment (-1/0/1)':
+                options = [-1, 0, 1]
+                value = st.selectbox(f'{column}', options, index=1, key=input_key)
+            else:
+                # Ubah label kolom menjadi lebih singkat
+                label = column.split(' ')[0]
+                value = st.number_input(f'{label}', value=np.nan, key=input_key)
+                if np.isnan(value):
+                    value = 0.0
+            
             input_row.append(value)
         input_values.append(input_row)
 
@@ -107,9 +147,34 @@ def show_prediksi():
         # Create dataframe for predicted values
         df_predicted = pd.DataFrame(predicted_data, columns=relevant_columns)
 
-        # Display predicted values as dataframe
+        # Remove index from dataframe
+        df_predicted_no_index = df_predicted.copy()
+        df_predicted_no_index.reset_index(drop=True, inplace=True)
+
+        # Restrict values for Sentiment column
+        #df_predicted_no_index['Sentiment'] = df_predicted_no_index['Sentiment'].apply(lambda x: -1 if x < -0.5 else (1 if x > 0.5 else 0))
+        df_predicted_no_index['Sentiment (-1/0/1)'] = df_predicted_no_index['Sentiment (-1/0/1)'].apply(lambda x: -1 if x < 0 else (0 if x == 0 else 1))
+
+        st.write("##")
+        
+        # Display predicted values as table without index
         st.subheader('Hasil Prediksi')
-        st.dataframe(df_predicted)
+        st.write(df_predicted_no_index.to_html(index=False, justify='center'), unsafe_allow_html=True)
+
+        st.write("##")
+        st.write("##")
+        st.write("---")
+        st.write("---")
+
+        # Get the predicted close price for the next day
+        predicted_close = df_predicted_no_index['Close (Rp)'].iloc[0]
+
+        # Display the predicted close price
+        st.markdown('<p style="font-size: 32px; text-align: center;">Hasil Prediksi Harga Pada Hari Berikutnya (Rp) :</p>', unsafe_allow_html=True)
+        st.markdown(f'<p style="font-size: 48px; text-align: center;"> {predicted_close}</p>', unsafe_allow_html=True)
+
+        st.write("---")
+        st.write("---")
 
 def show_kontak():
     # ---- PROJECTS ----
