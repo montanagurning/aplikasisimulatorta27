@@ -8,7 +8,8 @@ import requests
 from streamlit_lottie import st_lottie
 
 # Load the pre-trained model
-model = load_model('best_model.h5')
+#model = load_model('best_model.h5')
+model = load_model('GRU_60_40_best_model.h5')
 
 # Preprocess the dataset
 relevant_columns = ['Open (Rp)', 'High (Rp)', 'Low (Rp)', 'Volume', 'Sentiment (-1/0/1)', 'Close (Rp)']  # Ganti dengan kolom-kolom yang relevan dari dataset Anda
