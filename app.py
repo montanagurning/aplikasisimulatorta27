@@ -48,7 +48,7 @@ def show_beranda():
     # ---- HEADER SECTION ----
     with st.container():
         st.subheader("HALO! SELAMAT DATANG DI WEBSITE INI :wave:")
-        st.markdown('<p class="title-justify" style="font-size: 32px; font-weight: bold;">Prediksi Harga Saham dengan Pendekatan Algoritma Long Short Term Memory (LSTM) dan Gated Recurrent Unit (GRU) dengan Analisis Sentimen Twitter</p>', unsafe_allow_html=True)
+        st.markdown('<p class="title-justify" style="font-size: 32px; font-weight: bold;">Prediksi Harga Saham dengan Pendekatan Algoritma Long Short Term Memory (LSTM) dan Gated Recurrent Unit (GRU)</p>', unsafe_allow_html=True)
         st.markdown('<p class="text-justify">Teknologi machine learning dapat dimanfaatkan untuk memprediksi pergerakan harga saham. Dengan mengumpulkan data historis dan informasi lainnya, model machine learning dapat dilatih untuk mempelajari pola dan tren dalam data dan menggunakan informasi tersebut untuk memprediksi pergerakan harga saham. Namun, perlu diingat bahwa pasar saham sangat kompleks dan dipengaruhi oleh banyak faktor. Oleh karena itu, prediksi harga saham selalu memiliki tingkat ketidakpastian yang tinggi dan bukan merupakan sesuatu yang dapat diandalkan secara mutlak.</p>', unsafe_allow_html=True)
         #st.write("[Artefak Tugas Akhir >>>](https://drive.google.com/drive/folders/11iqhOTdJxsybn8x1jLwVRErZ4Qn68p8U)")
 
